@@ -64,6 +64,7 @@ Package | Key | Main CSS Class
 `@editorjs/raw` | `raw` | 
 `@editorjs/simple-image` | `simpleImage` | `.prs-image`
 `@editorjs/warning` | `warning` | `.prs-warning`
+`@editorjs/quote` | `quote` | `.prs-quote`
 
 ## Methods 
 
