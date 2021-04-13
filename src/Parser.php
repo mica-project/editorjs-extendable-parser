@@ -107,7 +107,7 @@ class Parser
                     break;
                 case 'quote':
                     $this->parseQuote($block);
-                    break;    
+                    break;
                 case 'link':
                     $this->parseLink($block);
                     break;
@@ -125,7 +125,7 @@ class Parser
                     break;
                 case 'image':
                     $this->parseStandardImage($block);
-                    break;  
+                    break;
                 case 'simpleImage':
                     $this->parseImage($block);
                     break;
@@ -421,12 +421,13 @@ class Parser
 
         $blockquote->setAttribute('class', "{$this->prefix}-blockquote");
         $blockquote->appendChild($this->html5->loadHTMLFragment($block->data->text));
-
-        $figCaption = $this->dom->createElement('figcaption');
-        $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
-
         $figure->appendChild($blockquote);
-        $figure->appendChild($figCaption);
+
+        if ($block->data->caption) {
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
 
         $this->dom->appendChild($figure);
     }
