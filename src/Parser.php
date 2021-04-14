@@ -129,6 +129,9 @@ class Parser
                 case 'simpleImage':
                     $this->parseImage($block);
                     break;
+                case 'table':
+                    $this->parseTable($block);
+                    break;    
                 default:
                     break;
             }
@@ -430,5 +433,40 @@ class Parser
         }
 
         $this->dom->appendChild($figure);
+    }
+
+    private function parseTable($block)
+    {
+        $table = $this->dom->createElement('table');
+        $table->setAttribute('class', "{$this->prefix}-table");
+        
+        $tr_top = $this->dom->createElement('tr');
+        $thead = $this->dom->createElement('thead');
+        $tbody = $this->dom->createElement('tbody');
+        $thead->appendChild($tr_top);
+        $table->appendChild($thead);
+        $table->appendChild($tbody);
+
+       
+
+        foreach($block->data->content[0] as $head){
+            $th = $this->dom->createElement('th', $head);
+            $tr_top->appendChild($th);
+        }
+
+        $dataset = $block->data->content;
+        unset($dataset[0]);
+
+        foreach($dataset as $data) {
+            $tr = $this->dom->createElement('tr');
+            foreach($data as $item){
+                $td = $this->dom->createElement('td', $item);
+                $tr->appendChild($td);
+            }
+            $tbody->appendChild($tr);
+        }
+    
+
+        $this->dom->appendChild($table);
     }
 }
