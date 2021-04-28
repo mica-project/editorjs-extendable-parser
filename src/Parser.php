@@ -131,7 +131,7 @@ class Parser
                     break;
                 case 'table':
                     $this->parseTable($block);
-                    break;    
+                    break;
                 default:
                     break;
             }
@@ -404,13 +404,14 @@ class Parser
         $img->setAttribute('src', $block->data->file->url);
         $img->setAttribute('class', implode(' ', $imgAttrs));
 
-        $figCaption = $this->dom->createElement('figcaption');
-
-        $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
-
         $figure->appendChild($img);
 
-        $figure->appendChild($figCaption);
+        if ($block->data->caption) {
+
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
 
         $this->dom->appendChild($figure);
     }
@@ -439,7 +440,7 @@ class Parser
     {
         $table = $this->dom->createElement('table');
         $table->setAttribute('class', "{$this->prefix}-table");
-        
+
         $tr_top = $this->dom->createElement('tr');
         $thead = $this->dom->createElement('thead');
         $tbody = $this->dom->createElement('tbody');
@@ -447,9 +448,9 @@ class Parser
         $table->appendChild($thead);
         $table->appendChild($tbody);
 
-       
 
-        foreach($block->data->content[0] as $head){
+
+        foreach ($block->data->content[0] as $head) {
             $th = $this->dom->createElement('th', $head);
             $tr_top->appendChild($th);
         }
@@ -457,15 +458,15 @@ class Parser
         $dataset = $block->data->content;
         unset($dataset[0]);
 
-        foreach($dataset as $data) {
+        foreach ($dataset as $data) {
             $tr = $this->dom->createElement('tr');
-            foreach($data as $item){
+            foreach ($data as $item) {
                 $td = $this->dom->createElement('td', $item);
                 $tr->appendChild($td);
             }
             $tbody->appendChild($tr);
         }
-    
+
 
         $this->dom->appendChild($table);
     }
