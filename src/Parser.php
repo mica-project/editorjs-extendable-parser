@@ -30,6 +30,13 @@ class Parser
      */
     private $prefix = "prs";
 
+    /**
+     * @var array
+     */
+    public $customImgAttrs = [
+        'border border-alhi-200',
+    ];
+
     public function __construct(string $data)
     {
         $this->data = json_decode($data);
@@ -372,6 +379,7 @@ class Parser
         if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
         if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
         if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
+        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
 
         $img->setAttribute('src', $block->data->url);
         $img->setAttribute('class', implode(' ', $imgAttrs));
@@ -400,6 +408,7 @@ class Parser
         if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
         if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
         if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
+        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
 
         $img->setAttribute('src', $block->data->file->url);
         $img->setAttribute('class', implode(' ', $imgAttrs));
