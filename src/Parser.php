@@ -139,6 +139,9 @@ class Parser
                 case 'table':
                     $this->parseTable($block);
                     break;
+                case 'linkTool':
+                    $this->parseLinkTool($block);
+                    break;
                 default:
                     break;
             }
@@ -478,5 +481,31 @@ class Parser
 
 
         $this->dom->appendChild($table);
+    }
+
+    private function parseLinkTool($block)
+    {
+        $figure = $this->dom->createElement('figure');
+        $figure->setAttribute('class', "{$this->prefix}-main-link");
+
+        $link = $this->dom->createElement('a');
+        $link->setAttribute('class', "{$this->prefix}-link");
+        $link->setAttribute('href', $block->data->link);
+
+        $img = $this->dom->createElement('img');
+        $img->setAttribute('src', $block->data->meta->image->url);
+
+        $link->appendChild($img);
+
+        $link_title = $this->dom->createElement('a');
+        $link_title->setAttribute('class', "{$this->prefix}-link-title");
+        $link_title->setAttribute('href', $block->data->link);
+        $link_title->appendChild($this->html5->loadHTMLFragment($block->data->meta->title));
+
+        $link->appendChild($link_title);
+
+        $figure->appendChild($link);
+
+        $this->dom->appendChild($figure);
     }
 }
