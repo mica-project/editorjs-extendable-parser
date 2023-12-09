@@ -7,7 +7,7 @@ Parse to HTML clean JSON Data from [Editor.js](https://editorjs.io/ "Editor.js H
 ## Installation
 
 ```
-composer require durlecode/editorjs-simple-html-parser
+composer require boring-dragon/editorjs-simple-html-parser
 ```
 
 ## Usage
@@ -64,6 +64,7 @@ Package | Key | Main CSS Class
 `@editorjs/raw` | `raw` | 
 `@editorjs/simple-image` | `simpleImage` | `.prs-image`
 `@editorjs/warning` | `warning` | `.prs-warning`
+`@editorjs/quote` | `quote` | `.prs-quote`
 
 ## Methods 
 

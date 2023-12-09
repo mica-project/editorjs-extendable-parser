@@ -30,6 +30,13 @@ class Parser
      */
     private $prefix = "prs";
 
+    /**
+     * @var array
+     */
+    public $customImgAttrs = [
+        'border border-alhi-200',
+    ];
+
     public function __construct(string $data)
     {
         $this->data = json_decode($data);
@@ -105,6 +112,9 @@ class Parser
                 case 'paragraph':
                     $this->parseParagraph($block);
                     break;
+                case 'quote':
+                    $this->parseQuote($block);
+                    break;
                 case 'link':
                     $this->parseLink($block);
                     break;
@@ -120,8 +130,17 @@ class Parser
                 case 'warning':
                     $this->parseWarning($block);
                     break;
+                case 'image':
+                    $this->parseStandardImage($block);
+                    break;
                 case 'simpleImage':
                     $this->parseImage($block);
+                    break;
+                case 'table':
+                    $this->parseTable($block);
+                    break;
+                case 'linkTool':
+                    $this->parseLinkTool($block);
                     break;
                 default:
                     break;
@@ -363,6 +382,7 @@ class Parser
         if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
         if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
         if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
+        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
 
         $img->setAttribute('src', $block->data->url);
         $img->setAttribute('class', implode(' ', $imgAttrs));
@@ -374,6 +394,117 @@ class Parser
         $figure->appendChild($img);
 
         $figure->appendChild($figCaption);
+
+        $this->dom->appendChild($figure);
+    }
+
+    private function parseStandardImage($block)
+    {
+        $figure = $this->dom->createElement('figure');
+
+        $figure->setAttribute('class', "{$this->prefix}-image");
+
+        $img = $this->dom->createElement('img');
+
+        $imgAttrs = [];
+
+        if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
+        if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
+        if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
+        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
+
+        $img->setAttribute('src', $block->data->file->url);
+        $img->setAttribute('class', implode(' ', $imgAttrs));
+
+        $figure->appendChild($img);
+
+        if ($block->data->caption) {
+
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
+
+        $this->dom->appendChild($figure);
+    }
+
+    private function parseQuote($block)
+    {
+        $figure = $this->dom->createElement('figure');
+        $figure->setAttribute('class', "{$this->prefix}-quote");
+
+        $blockquote = $this->dom->createElement('blockquote');
+
+        $blockquote->setAttribute('class', "{$this->prefix}-blockquote");
+        $blockquote->appendChild($this->html5->loadHTMLFragment($block->data->text));
+        $figure->appendChild($blockquote);
+
+        if ($block->data->caption) {
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
+
+        $this->dom->appendChild($figure);
+    }
+
+    private function parseTable($block)
+    {
+        $table = $this->dom->createElement('table');
+        $table->setAttribute('class', "{$this->prefix}-table");
+
+        $tr_top = $this->dom->createElement('tr');
+        $thead = $this->dom->createElement('thead');
+        $tbody = $this->dom->createElement('tbody');
+        $thead->appendChild($tr_top);
+        $table->appendChild($thead);
+        $table->appendChild($tbody);
+
+
+
+        foreach ($block->data->content[0] as $head) {
+            $th = $this->dom->createElement('th', $head);
+            $tr_top->appendChild($th);
+        }
+
+        $dataset = $block->data->content;
+        unset($dataset[0]);
+
+        foreach ($dataset as $data) {
+            $tr = $this->dom->createElement('tr');
+            foreach ($data as $item) {
+                $td = $this->dom->createElement('td', $item);
+                $tr->appendChild($td);
+            }
+            $tbody->appendChild($tr);
+        }
+
+
+        $this->dom->appendChild($table);
+    }
+
+    private function parseLinkTool($block)
+    {
+        $figure = $this->dom->createElement('figure');
+        $figure->setAttribute('class', "{$this->prefix}-main-link");
+
+        $link = $this->dom->createElement('a');
+        $link->setAttribute('class', "{$this->prefix}-link");
+        $link->setAttribute('href', $block->data->link);
+
+        $img = $this->dom->createElement('img');
+        $img->setAttribute('src', $block->data->meta->image->url);
+
+        $link->appendChild($img);
+
+        $link_title = $this->dom->createElement('a');
+        $link_title->setAttribute('class', "{$this->prefix}-link-title");
+        $link_title->setAttribute('href', $block->data->link);
+        $link_title->appendChild($this->html5->loadHTMLFragment($block->data->meta->title));
+
+        $link->appendChild($link_title);
+
+        $figure->appendChild($link);
 
         $this->dom->appendChild($figure);
     }

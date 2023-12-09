@@ -1,5 +1,5 @@
 {
-    "name": "durlecode/editorjs-simple-html-parser",
+    "name": "boring-dragon/editorjs-simple-html-parser",
     "description": "A simple Json to Html parser for EditorJS library",
     "minimum-stability": "dev",
     "autoload": {
@@ -23,5 +23,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8"
-    }
+    },
+    "license": "MIT"
 }
