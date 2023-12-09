@@ -89,7 +89,7 @@ class Parser
     {
         $this->init();
 
-        return $this->dom->saveHTML();
+        return html_entity_decode($this->dom->saveHTML());
     }
 
     /**
