@@ -97,53 +97,13 @@ class Parser
      */
     private function init()
     {
-        if (!$this->hasBlocks()) throw new Exception('No Blocks to parse !');
+        if (!$this->hasBlocks()) throw new Exception('No blocks to parse !');
         foreach ($this->data->blocks as $block) {
-            switch ($block->type) {
-                case 'header':
-                    $this->parseHeader($block);
-                    break;
-                case 'delimiter':
-                    $this->parseDelimiter();
-                    break;
-                case 'code':
-                    $this->parseCode($block);
-                    break;
-                case 'paragraph':
-                    $this->parseParagraph($block);
-                    break;
-                case 'quote':
-                    $this->parseQuote($block);
-                    break;
-                case 'link':
-                    $this->parseLink($block);
-                    break;
-                case 'embed':
-                    $this->parseEmbed($block);
-                    break;
-                case 'raw':
-                    $this->parseRaw($block);
-                    break;
-                case 'list':
-                    $this->parseList($block);
-                    break;
-                case 'warning':
-                    $this->parseWarning($block);
-                    break;
-                case 'image':
-                    $this->parseStandardImage($block);
-                    break;
-                case 'simpleImage':
-                    $this->parseImage($block);
-                    break;
-                case 'table':
-                    $this->parseTable($block);
-                    break;
-                case 'linkTool':
-                    $this->parseLinkTool($block);
-                    break;
-                default:
-                    break;
+            $method = 'parse'.ucfirst($block->type);
+            if (method_exists($this, $method)) {
+                $this->{$method}($block);
+            } else {
+                throw new Exception('Unknow block '.$block->type.' !');
             }
         }
     }
