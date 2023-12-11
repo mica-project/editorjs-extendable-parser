@@ -353,6 +353,23 @@ class Parser
         $this->dom->appendChild($wrapper);
     }
 
+    private function parseAlert($block)
+    {
+        $alignment = isset($block->data->align) ? $block->data->align : false;
+
+        $style = isset($block->data->type) ? $block->data->type : false;
+
+        $class = $this->addClass($block->type, $alignment, $style);
+
+        $node = $this->dom->createElement('p');
+
+        $node->setAttribute('class', $class);
+
+        $node->appendChild(new DOMText($block->data->message));
+
+        $this->dom->appendChild($node);
+    }
+
     private function parseImage($block)
     {
         $figure = $this->dom->createElement('figure');
