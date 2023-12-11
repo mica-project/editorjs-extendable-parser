@@ -113,24 +113,43 @@ class Parser
         return count($this->data->blocks) !== 0;
     }
 
+    private function addClass($type, $alignment = false, $style = false, $custom = false)
+    {
+        $class[] = $this->prefix.'-'.$type;
+        
+        if ($alignment) {
+            $class[] = $this->prefix.'-'.$type.'--'.$alignment;
+        }
+
+        if ($style) {
+            $class[] = $this->prefix.'-'.$type.'--'.$style;
+        }
+        
+        return implode(' ', $class);
+    }
+
     private function parseHeader($block)
     {
         $text = new DOMText($block->data->text);
 
+        $alignment = isset($block->data->alignment) ? $block->data->alignment : false;
+
+        $class = $this->addClass($block->type, $alignment);
+
         $header = $this->dom->createElement('h' . $block->data->level);
 
-        $header->setAttribute('class', "{$this->prefix}-h{$block->data->level}");
+        $header->setAttribute('class', $class);
 
         $header->appendChild($text);
 
         $this->dom->appendChild($header);
     }
 
-    private function parseDelimiter()
+    private function parseDelimiter($block)
     {
         $node = $this->dom->createElement('hr');
 
-        $node->setAttribute('class', "{$this->prefix}-delimiter");
+        $node->setAttribute('class', $this->addClass($block->type));
 
         $this->dom->appendChild($node);
     }
@@ -158,9 +177,13 @@ class Parser
 
     private function parseParagraph($block)
     {
+        $alignment = isset($block->data->alignment) ? $block->data->alignment : false;
+
+        $class = $this->addClass($block->type, $alignment);
+
         $node = $this->dom->createElement('p');
 
-        $node->setAttribute('class', "{$this->prefix}-paragraph");
+        $node->setAttribute('class', $class);
 
         $node->appendChild($this->html5->loadHTMLFragment($block->data->text));
 
@@ -264,9 +287,11 @@ class Parser
 
     private function parseRaw($block)
     {
+        $class = $this->addClass($block->type);
+
         $wrapper = $this->dom->createElement('div');
 
-        $wrapper->setAttribute('class', "{$this->prefix}-raw");
+        $wrapper->setAttribute('class', $class);
 
         $wrapper->appendChild($this->html5->loadHTMLFragment($block->data->html));
 
@@ -275,8 +300,7 @@ class Parser
 
     private function parseList($block)
     {
-        $wrapper = $this->dom->createElement('div');
-        $wrapper->setAttribute('class', "{$this->prefix}-list");
+        $class = $this->addClass($block->type, false, $block->data->style);
 
         $list = null;
 
@@ -295,9 +319,9 @@ class Parser
             $list->appendChild($li);
         }
 
-        $wrapper->appendChild($list);
+        $list->setAttribute('class', $class);
 
-        $this->dom->appendChild($wrapper);
+        $this->dom->appendChild($list);
     }
 
     private function parseWarning($block)
