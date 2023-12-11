@@ -451,8 +451,12 @@ class Parser
 
     private function parseTable($block)
     {
+        $style = !empty($block->data->withHeadings) ? 'headings' : false;
+
+        $class = $this->addClass($block->type, false, $style);
+
         $table = $this->dom->createElement('table');
-        $table->setAttribute('class', "{$this->prefix}-table");
+        $table->setAttribute('class', $class);
 
         $tr_top = $this->dom->createElement('tr');
         $thead = $this->dom->createElement('thead');
@@ -460,8 +464,6 @@ class Parser
         $thead->appendChild($tr_top);
         $table->appendChild($thead);
         $table->appendChild($tbody);
-
-
 
         foreach ($block->data->content[0] as $head) {
             $th = $this->dom->createElement('th', $head);
@@ -479,7 +481,6 @@ class Parser
             }
             $tbody->appendChild($tr);
         }
-
 
         $this->dom->appendChild($table);
     }
