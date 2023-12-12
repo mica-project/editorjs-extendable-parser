@@ -156,11 +156,9 @@ class Parser
 
     private function parseCode($block)
     {
-        $wrapper = $this->dom->createElement('div');
-
-        $wrapper->setAttribute('class', "{$this->prefix}-code");
-
         $pre = $this->dom->createElement('pre');
+
+        $pre->setAttribute('class', $this->addClass($block->type));
 
         $code = $this->dom->createElement('code');
 
@@ -170,9 +168,7 @@ class Parser
 
         $pre->appendChild($code);
 
-        $wrapper->appendChild($pre);
-
-        $this->dom->appendChild($wrapper);
+        $this->dom->appendChild($pre);
     }
 
     private function parseParagraph($block)
@@ -431,12 +427,15 @@ class Parser
 
     private function parseQuote($block)
     {
+        $alignment = isset($block->data->alignment) ? $block->data->alignment : false;
+
+        $class = $this->addClass($block->type, $alignment);
+
         $figure = $this->dom->createElement('figure');
-        $figure->setAttribute('class', "{$this->prefix}-quote");
+        $figure->setAttribute('class', $class);
 
         $blockquote = $this->dom->createElement('blockquote');
 
-        $blockquote->setAttribute('class', "{$this->prefix}-blockquote");
         $blockquote->appendChild($this->html5->loadHTMLFragment($block->data->text));
         $figure->appendChild($blockquote);
 
