@@ -240,9 +240,8 @@ class Parser
 
     private function parseEmbed($block)
     {
-        $wrapper = $this->dom->createElement('div');
-
-        $wrapper->setAttribute('class', "{$this->prefix}-embed");
+        $figure = $this->dom->createElement('figure');
+        $figure->setAttribute('class', $block->type);
 
         switch ($block->data->service) {
             case 'youtube':
@@ -254,22 +253,25 @@ class Parser
                     'allowfullscreen' => true
                 ];
 
-                $wrapper->appendChild($this->createIframe($attrs));
-
                 break;
-            case 'codepen' || 'gfycat':
+            // case 'codepen' || 'gfycat':
+            default:
 
                 $attrs = [
                     'height' => $block->data->height,
                     'src' => $block->data->embed,
                 ];
-
-                $wrapper->appendChild($this->createIframe($attrs));
-
-                break;
         }
 
-        $this->dom->appendChild($wrapper);
+        $figure->appendChild($this->createIframe($attrs));
+
+        if ($block->data->caption) {
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
+
+        $this->dom->appendChild($figure);
     }
 
     private function createIframe(array $attrs)
