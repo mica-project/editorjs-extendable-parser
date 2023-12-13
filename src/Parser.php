@@ -30,13 +30,6 @@ class Parser
      */
     private $prefix = "prs";
 
-    /**
-     * @var array
-     */
-    public $customImgAttrs = [
-        'border border-alhi-200',
-    ];
-
     public function __construct(string $data)
     {
         $this->data = json_decode($data);
@@ -376,23 +369,25 @@ class Parser
 
         $img = $this->dom->createElement('img');
 
+        $img->setAttribute('src', $block->data->url);
+
         $imgAttrs = [];
 
         if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
         if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
         if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
-        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
 
-        $img->setAttribute('src', $block->data->url);
-        $img->setAttribute('class', implode(' ', $imgAttrs));
-
-        $figCaption = $this->dom->createElement('figcaption');
-
-        $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
-
+        if (count($imgAttrs) > 0) {
+            $img->setAttribute('class', implode(' ', $imgAttrs));
+        }
+        
         $figure->appendChild($img);
 
-        $figure->appendChild($figCaption);
+        if (!empty($block->data->caption)) {
+            $figCaption = $this->dom->createElement('figcaption');
+            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figure->appendChild($figCaption);
+        }
 
         $this->dom->appendChild($figure);
     }
