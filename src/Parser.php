@@ -489,10 +489,9 @@ class Parser
     private function parseLinkTool($block)
     {
         $figure = $this->dom->createElement('figure');
-        $figure->setAttribute('class', "{$this->prefix}-main-link");
+        $figure->setAttribute('class', $this->addClass($block->type));
 
         $link = $this->dom->createElement('a');
-        $link->setAttribute('class', "{$this->prefix}-link");
         $link->setAttribute('href', $block->data->link);
 
         $img = $this->dom->createElement('img');
@@ -500,12 +499,15 @@ class Parser
 
         $link->appendChild($img);
 
-        $link_title = $this->dom->createElement('a');
-        $link_title->setAttribute('class', "{$this->prefix}-link-title");
-        $link_title->setAttribute('href', $block->data->link);
+        $link_title = $this->dom->createElement('p');
+        $link_title->setAttribute('class', "{$this->prefix}-{$block->type}--title");
         $link_title->appendChild($this->html5->loadHTMLFragment($block->data->meta->title));
-
         $link->appendChild($link_title);
+
+        $link_description = $this->dom->createElement('p');
+        $link_description->setAttribute('class', "{$this->prefix}-{$block->type}--description");
+        $link_description->appendChild($this->html5->loadHTMLFragment($block->data->meta->description));
+        $link->appendChild($link_description);
 
         $figure->appendChild($link);
 
