@@ -234,7 +234,7 @@ class Parser
     private function parseEmbed($block)
     {
         $figure = $this->dom->createElement('figure');
-        $figure->setAttribute('class', $block->type);
+        $figure->setAttribute('class', $this->prefix.'-'.$block->type);
 
         switch ($block->data->service) {
             case 'youtube':
