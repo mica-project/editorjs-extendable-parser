@@ -106,16 +106,16 @@ class Parser
         return count($this->data->blocks) !== 0;
     }
 
-    private function addClass($type, $alignment = false, $style = false, $custom = false)
+    private function addClass($type, $alignment = false, $style = false)
     {
         $class[] = $this->prefix.'-'.$type;
         
         if ($alignment) {
-            $class[] = $this->prefix.'-'.$type.'--'.$alignment;
+            $class[] = $this->prefix.'_'.$alignment;
         }
 
         if ($style) {
-            $class[] = $this->prefix.'-'.$type.'--'.$style;
+            $class[] = $this->prefix.'_'.$style;
         }
         
         return implode(' ', $class);
@@ -234,15 +234,19 @@ class Parser
     private function parseEmbed($block)
     {
         $figure = $this->dom->createElement('figure');
-        $figure->setAttribute('class', $this->prefix.'-'.$block->type);
+        
+        $class = $this->addClass($block->type, false, $block->data->service);
+
+        $figure->setAttribute('class', $class);
 
         switch ($block->data->service) {
             case 'youtube':
 
                 $attrs = [
+                    'width' => $block->data->width,
                     'height' => $block->data->height,
                     'src' => $block->data->embed,
-                    'allow' => 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture',
+                    'allow' => 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share',
                     'allowfullscreen' => true
                 ];
 
@@ -320,11 +324,14 @@ class Parser
         $title = new DOMText($block->data->title);
         $message = new DOMText($block->data->message);
 
+        $class = $this->addClass($block->type);
+
         $wrapper = $this->dom->createElement('div');
-        $wrapper->setAttribute('class', "{$this->prefix}-warning");
+
+        $wrapper->setAttribute('class', $class);
 
         $textWrapper = $this->dom->createElement('div');
-        $titleWrapper = $this->dom->createElement('p');
+        $titleWrapper = $this->dom->createElement('h4');
 
         $titleWrapper->appendChild($title);
         $messageWrapper = $this->dom->createElement('p');
@@ -334,9 +341,7 @@ class Parser
         $textWrapper->appendChild($titleWrapper);
         $textWrapper->appendChild($messageWrapper);
 
-        $icon = $this->dom->createElement('ion-icon');
-        $icon->setAttribute('name', 'information-outline');
-        $icon->setAttribute('size', 'large');
+        $icon = $this->dom->createElement('i');
 
         $wrapper->appendChild($icon);
         $wrapper->appendChild($textWrapper);
@@ -365,21 +370,21 @@ class Parser
     {
         $figure = $this->dom->createElement('figure');
 
-        $figure->setAttribute('class', "{$this->prefix}-image");
+        $attrs = [];
+
+        if ($block->data->withBorder) $attrs[] = "withborder";
+        if ($block->data->withBackground) $attrs[] = "withbackground";
+        if ($block->data->stretched) $attrs[] = "stretched";
+
+        $style = (count($attrs) > 0) ? implode(' ', $attrs) : false;
+
+        $class = $this->addClass($block->type, false, $style);
+
+        $figure->setAttribute('class', $class);
 
         $img = $this->dom->createElement('img');
 
         $img->setAttribute('src', $block->data->url);
-
-        $imgAttrs = [];
-
-        if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
-        if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
-        if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
-
-        if (count($imgAttrs) > 0) {
-            $img->setAttribute('class', implode(' ', $imgAttrs));
-        }
         
         $figure->appendChild($img);
 
@@ -396,24 +401,25 @@ class Parser
     {
         $figure = $this->dom->createElement('figure');
 
-        $figure->setAttribute('class', "{$this->prefix}-image");
+        $attrs = [];
+
+        if ($block->data->withBorder) $attrs[] = "withborder";
+        if ($block->data->withBackground) $attrs[] = "withbackground";
+        if ($block->data->stretched) $attrs[] = "stretched";
+
+        $style = (count($attrs) > 0) ? implode(' ', $attrs) : false;
+
+        $class = $this->addClass($block->type, false, $style);
+
+        $figure->setAttribute('class', $class);
 
         $img = $this->dom->createElement('img');
 
-        $imgAttrs = [];
-
-        if ($block->data->withBorder) $imgAttrs[] = "{$this->prefix}-image-border";
-        if ($block->data->withBackground) $imgAttrs[] = "{$this->prefix}-image-background";
-        if ($block->data->stretched) $imgAttrs[] = "{$this->prefix}-image-stretched";
-        $imgAttrs = array_merge($imgAttrs, $this->customImgAttrs);
-
-        $img->setAttribute('src', $block->data->file->url);
-        $img->setAttribute('class', implode(' ', $imgAttrs));
-
+        $img->setAttribute('src', $block->data->url);
+        
         $figure->appendChild($img);
 
-        if ($block->data->caption) {
-
+        if (!empty($block->data->caption)) {
             $figCaption = $this->dom->createElement('figcaption');
             $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
             $figure->appendChild($figCaption);
@@ -454,20 +460,27 @@ class Parser
         $table = $this->dom->createElement('table');
         $table->setAttribute('class', $class);
 
-        $tr_top = $this->dom->createElement('tr');
-        $thead = $this->dom->createElement('thead');
-        $tbody = $this->dom->createElement('tbody');
-        $thead->appendChild($tr_top);
-        $table->appendChild($thead);
-        $table->appendChild($tbody);
+        $dataset = $block->data->content;
 
-        foreach ($block->data->content[0] as $head) {
-            $th = $this->dom->createElement('th', $head);
-            $tr_top->appendChild($th);
+        if (!empty($block->data->withHeadings)) {
+            $tr_top = $this->dom->createElement('tr');
+            $thead = $this->dom->createElement('thead');
+            // $tbody = $this->dom->createElement('tbody');
+            $thead->appendChild($tr_top);
+            $table->appendChild($thead);
+            // $table->appendChild($tbody);
+
+            foreach ($block->data->content[0] as $head) {
+                $th = $this->dom->createElement('th', $head);
+                $tr_top->appendChild($th);
+            }
+
+            // $dataset = $block->data->content;
+            unset($dataset[0]);
         }
 
-        $dataset = $block->data->content;
-        unset($dataset[0]);
+        $tbody = $this->dom->createElement('tbody');
+        $table->appendChild($tbody);
 
         foreach ($dataset as $data) {
             $tr = $this->dom->createElement('tr');
@@ -495,12 +508,12 @@ class Parser
         $link->appendChild($img);
 
         $link_title = $this->dom->createElement('p');
-        $link_title->setAttribute('class', "{$this->prefix}-{$block->type}--title");
+        $link_title->setAttribute('class', "{$this->prefix}_title");
         $link_title->appendChild($this->html5->loadHTMLFragment($block->data->meta->title));
         $link->appendChild($link_title);
 
         $link_description = $this->dom->createElement('p');
-        $link_description->setAttribute('class', "{$this->prefix}-{$block->type}--description");
+        $link_description->setAttribute('class', "{$this->prefix}_description");
         $link_description->appendChild($this->html5->loadHTMLFragment($block->data->meta->description));
         $link->appendChild($link_description);
 
