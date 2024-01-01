@@ -28,10 +28,15 @@ class Parser
     /**
      * @var string
      */
-    private $prefix = "prs";
+    private $prefix;
 
     public function __construct(string $data)
     {
+        require_once( __DIR__ . '/Config.php');
+        $this->config = new Config();
+
+        $this->prefix = $this->config->getPrefix();
+
         $this->data = json_decode($data);
 
         $this->dom = new DOMDocument(1.0, 'UTF-8');
@@ -52,7 +57,7 @@ class Parser
      */
     public function getPrefix(): string
     {
-        return $this->prefix;
+        return !empty($this->prefix) ? $this->prefix : $this->config->getPrefix();
     }
 
     /**

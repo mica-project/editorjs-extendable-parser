@@ -44,6 +44,8 @@ class HtmlParser
         require_once( __DIR__ . '/Config.php');
     	$this->config = new Config();
 
+    	$this->prefix = $this->config->getPrefix();
+
         libxml_use_internal_errors(true);
 
         $this->html = $html;
@@ -126,6 +128,7 @@ class HtmlParser
         if (!$this->hasHtml()) throw new Exception('No HTML to parse !');
 
         $finder = new DomXPath($this->dom);
+
 		$nodes = $finder->query("//*[contains(@class, '$this->prefix')]");
 
 		foreach ($nodes as $node) {
