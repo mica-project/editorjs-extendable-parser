@@ -144,11 +144,9 @@ Return Editor.js content blocks
 ##### Code
 
 ```html
-<div class="prs-code">
-    <pre>
-        <code></code>
-    </pre>
-</div>
+<pre class="prs-code">
+    <code></code>
+</pre>
 ```
 
 ##### Embed 
