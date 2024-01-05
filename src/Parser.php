@@ -410,7 +410,7 @@ class Parser
 
     private function parseTable($block)
     {
-        $style = !empty($block->data->withHeadings) ? 'headings' : false;
+        $style = !empty($block->data->withHeadings) ? 'withheadings' : false;
 
         $class = $this->addClass($block->type, false, $style);
 
