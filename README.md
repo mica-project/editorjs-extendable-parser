@@ -18,7 +18,7 @@ Package | Key | Main CSS Class<br>(with default prefix) | Additional / modificat
 `@editorjs/raw` | `raw` |  |
 `@editorjs/simple-image` | `simpleImage` | `.prs-image` | additional:<br>`.prs_withborder`<br>`.prs_withbackground`<br>`.prs_stretched`
 `@editorjs/embed` | `embed` | `.prs-embed` | additional:<br>`.prs_youtube`<br>`.prs_codepen`<br>`.prs_vimeo`
-`@editorjs/link` | `linkTool` | `.prs-linktool` | additional:<br>`.prs_title`<br>`.prs_description`
+`@editorjs/link` | `linkTool` | `.prs-linktool` | additional:<br>`.prs_title`<br>`.prs_description`<br>`.prs_sitename`
 `@editorjs/delimiter` | `delimiter` | `.prs-delimiter` |
 `editorjs-alert` | `alert` | `.prs-alert` | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>additional:<br>`.prs_primary`<br>`.prs_secondary`<br>`.prs_info`<br>`.prs_success`<br>`.prs_warning`<br>`.prs_danger`<br>`.prs_light`<br>`.prs_dark`
 `@editorjs/warning` | `warning` | `.prs-warning` |
@@ -165,14 +165,15 @@ Return Editor.js content blocks
 <hr class="prs-delimiter">
 ```
 
-##### Link / LinkTool
+##### LinkTool
 
 ```html
 <figure class="prs-linkTool">
-    <a href="https://github.com/">
+    <a href="https://github.com/" target="_blank">
        <img src="https://example.com/cat.png" alt="">
        <p class="prs_title">Title</p>
        <p class="prs_description">Description</p>
+       <p class="prs_sitename">example.com</p>
     </a>
 </figure>
 ```
