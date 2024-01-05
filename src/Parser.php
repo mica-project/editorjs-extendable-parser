@@ -9,6 +9,11 @@ use Masterminds\HTML5;
 class Parser
 {
     /**
+     * @var Config
+     */
+    private $config;
+    
+    /**
      * @var StdClass
      */
     private $data;

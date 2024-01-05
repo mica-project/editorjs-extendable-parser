@@ -8,6 +8,11 @@ use DomXPath;
 class HtmlParser
 {
     /**
+     * @var Config
+     */
+    private $config;
+
+    /**
      * @var StdClass
      */
     private $html;
@@ -165,7 +170,7 @@ class HtmlParser
 			}
 
 			// Call block parse function
-			$method = isset($blockType) ? 'parse'.ucfirst($blockType) : null;
+			$method = isset($blockType) ? 'parse'.ucfirst($blockType) : '';
 			if (method_exists($this, $method)) {
 				$data = $this->{$method}($node, $styles);				
 				array_push($this->blocks, $data);
