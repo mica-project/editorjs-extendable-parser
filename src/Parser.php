@@ -186,58 +186,6 @@ class Parser
         $this->dom->appendChild($node);
     }
 
-    private function parseLink($block)
-    {
-        $link = $this->dom->createElement('a');
-
-        $link->setAttribute('href', $block->data->link);
-        $link->setAttribute('target', '_blank');
-        $link->setAttribute('class', "{$this->prefix}-link");
-
-        $innerContainer = $this->dom->createElement('div');
-        $innerContainer->setAttribute('class', "{$this->prefix}-link-container");
-
-        $hasTitle = isset($block->data->meta->title);
-        $hasDescription = isset($block->data->meta->description);
-        $hasImage = isset($block->data->meta->image);
-
-        if ($hasTitle) {
-            $titleNode = $this->dom->createElement('div');
-            $titleNode->setAttribute('class', "{$this->prefix}-link-title");
-            $titleText = new DOMText($block->data->meta->title);
-            $titleNode->appendChild($titleText);
-            $innerContainer->appendChild($titleNode);
-        }
-
-        if ($hasDescription) {
-            $descriptionNode = $this->dom->createElement('div');
-            $descriptionNode->setAttribute('class', "{$this->prefix}-link-description");
-            $descriptionText = new DOMText($block->data->meta->description);
-            $descriptionNode->appendChild($descriptionText);
-            $innerContainer->appendChild($descriptionNode);
-        }
-
-        $linkContainer = $this->dom->createElement('div');
-        $linkContainer->setAttribute('class', "{$this->prefix}-link-url");
-        $linkText = new DOMText($block->data->link);
-        $linkContainer->appendChild($linkText);
-        $innerContainer->appendChild($linkContainer);
-
-        $link->appendChild($innerContainer);
-
-        if ($hasImage) {
-            $imageContainer = $this->dom->createElement('div');
-            $imageContainer->setAttribute('class', "{$this->prefix}-link-img-container");
-            $image = $this->dom->createElement('img');
-            $image->setAttribute('src', $block->data->meta->image->url);
-            $imageContainer->appendChild($image);
-            $link->appendChild($imageContainer);
-            $innerContainer->setAttribute('class', "{$this->prefix}-link-container-with-img");
-        }
-
-        $this->dom->appendChild($link);
-    }
-
     private function parseEmbed($block)
     {
         $figure = $this->dom->createElement('figure');
@@ -392,6 +340,7 @@ class Parser
         $img = $this->dom->createElement('img');
 
         $img->setAttribute('src', $block->data->url);
+        $img->setAttribute('alt', '');
         
         $figure->appendChild($img);
 
@@ -423,6 +372,7 @@ class Parser
         $img = $this->dom->createElement('img');
 
         $img->setAttribute('src', $block->data->url);
+        $img->setAttribute('alt', '');
         
         $figure->appendChild($img);
 
@@ -506,11 +456,15 @@ class Parser
         $figure = $this->dom->createElement('figure');
         $figure->setAttribute('class', $this->addClass($block->type));
 
+        $site_name = !empty($block->data->meta->site_name) ? $block->data->meta->site_name : parse_url($block->data->link, PHP_URL_HOST);
+
         $link = $this->dom->createElement('a');
         $link->setAttribute('href', $block->data->link);
+        $link->setAttribute('target', '_blank');
 
         $img = $this->dom->createElement('img');
         $img->setAttribute('src', $block->data->meta->image->url);
+        $img->setAttribute('alt', '');
 
         $link->appendChild($img);
 
@@ -523,6 +477,11 @@ class Parser
         $link_description->setAttribute('class', "{$this->prefix}_description");
         $link_description->appendChild($this->html5->loadHTMLFragment($block->data->meta->description));
         $link->appendChild($link_description);
+
+        $link_name = $this->dom->createElement('p');
+        $link_name->setAttribute('class', "{$this->prefix}_sitename");
+        $link_name->appendChild($this->html5->loadHTMLFragment($site_name));
+        $link->appendChild($link_name);
 
         $figure->appendChild($link);
 
