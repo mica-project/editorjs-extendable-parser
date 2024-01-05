@@ -337,15 +337,12 @@ class HtmlParser
 		$sitename = $this->getElementsByClass($node, 'p', $this->prefix.'_sitename');
 		$sitename = $sitename[0]->textContent;
 
-		$link = $node->getElementsByTagName('a')->item(0)->getAttribute('href');
-
 		$block['type'] = 'linkTool';
-		$block['data']['link'] = $link;
+		$block['data']['link'] = $node->getElementsByTagName('a')->item(0)->getAttribute('href');
 		$block['data']['meta']['site_name'] = $sitename;
 		$block['data']['meta']['image']['url'] = $node->getElementsByTagName('img')->item(0)->getAttribute('src');
 		$block['data']['meta']['title'] = $title;
 		$block['data']['meta']['description'] = $description;
-		$block['data']['meta']['url'] = $link;
 		
 		return $block;
 	}
