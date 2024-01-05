@@ -328,16 +328,20 @@ class HtmlParser
 	 */
 	private function parseLinkTool($node, $styles) {
 
-		$title = $this->getElementsByClass($node, 'p', 'prs_title');
+		$title = $this->getElementsByClass($node, 'p', $this->prefix.'_title');
 		$title = $title[0]->textContent;
 
-		$description = $this->getElementsByClass($node, 'p', 'prs_description');
+		$description = $this->getElementsByClass($node, 'p', $this->prefix.'_description');
 		$description = $description[0]->textContent;
+
+		$sitename = $this->getElementsByClass($node, 'p', $this->prefix.'_sitename');
+		$sitename = $sitename[0]->textContent;
 
 		$link = $node->getElementsByTagName('a')->item(0)->getAttribute('href');
 
 		$block['type'] = 'linkTool';
 		$block['data']['link'] = $link;
+		$block['data']['meta']['site_name'] = $sitename;
 		$block['data']['meta']['image']['url'] = $node->getElementsByTagName('img')->item(0)->getAttribute('src');
 		$block['data']['meta']['title'] = $title;
 		$block['data']['meta']['description'] = $description;
