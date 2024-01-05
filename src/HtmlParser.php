@@ -4,8 +4,6 @@ namespace Durlecode\EJSParser;
 
 use DOMDocument;
 use DomXPath;
-use Exception;
-use StdClass;
 
 class HtmlParser
 {
@@ -41,8 +39,9 @@ class HtmlParser
 
     public function __construct(string $html)
     {
-        require_once( __DIR__ . '/Config.php');
     	$this->config = new Config();
+
+    	if (empty($html)) throw new ParserException('Empty HTML !');
 
     	$this->prefix = $this->config->getPrefix();
 
@@ -121,11 +120,11 @@ class HtmlParser
     }
 
     /**
-     * @throws Exception
+     * @throws ParserException
      */
     private function init()
     {
-        if (!$this->hasHtml()) throw new Exception('No HTML to parse !');
+        if (!$this->hasHtml()) throw new ParserException('No HTML to parse !');
 
         $finder = new DomXPath($this->dom);
 
@@ -171,9 +170,9 @@ class HtmlParser
 				$data = $this->{$method}($node, $styles);				
 				array_push($this->blocks, $data);
 			}
-			// else {
-            //     throw new Exception('Unknow block '.$blockType.' !');
-            // }
+			else if (!empty($method)) {
+                throw new ParserException('Unknow block '.$blockType.' !');
+            }
 		}
     }
 

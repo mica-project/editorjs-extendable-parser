@@ -4,9 +4,7 @@ namespace Durlecode\EJSParser;
 
 use DOMDocument;
 use DOMText;
-use Exception;
 use Masterminds\HTML5;
-use StdClass;
 
 class Parser
 {
@@ -32,7 +30,6 @@ class Parser
 
     public function __construct(string $data)
     {
-        require_once( __DIR__ . '/Config.php');
         $this->config = new Config();
 
         $this->prefix = $this->config->getPrefix();
@@ -91,17 +88,17 @@ class Parser
     }
 
     /**
-     * @throws Exception
+     * @throws ParserException
      */
     private function init()
     {
-        if (!$this->hasBlocks()) throw new Exception('No blocks to parse !');
+        if (!$this->hasBlocks()) throw new ParserException('No blocks to parse !');
         foreach ($this->data->blocks as $block) {
             $method = 'parse'.ucfirst($block->type);
             if (method_exists($this, $method)) {
                 $this->{$method}($block);
             } else {
-                throw new Exception('Unknow block '.$block->type.' !');
+                throw new ParserException('Unknow block '.$block->type.' !');
             }
         }
     }

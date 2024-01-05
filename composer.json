@@ -1,5 +1,6 @@
 {
     "name": "edd-g/editorjs-simple-html-parser",
+    "type": "library",
     "description": "A simple Json to Html parser for EditorJS library",
     "minimum-stability": "dev",
     "autoload": {
