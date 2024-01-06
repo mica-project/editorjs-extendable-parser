@@ -122,7 +122,10 @@ class Parser
         }
 
         if ($style) {
-            $class[] = $this->prefix.'_'.$style;
+            $styles = explode(' ', $style);
+            foreach ($styles as $v) {
+                $class[] = $this->prefix.'_'.$v;
+            }            
         }
         
         return implode(' ', $class);
@@ -327,6 +330,8 @@ class Parser
 
         $attrs = [];
 
+        $caption = (!empty($block->data->caption)) ? $block->data->caption : '';
+
         if ($block->data->withBorder) $attrs[] = "withborder";
         if ($block->data->withBackground) $attrs[] = "withbackground";
         if ($block->data->stretched) $attrs[] = "stretched";
@@ -340,13 +345,13 @@ class Parser
         $img = $this->dom->createElement('img');
 
         $img->setAttribute('src', $block->data->url);
-        $img->setAttribute('alt', '');
+        $img->setAttribute('alt', $caption);
         
         $figure->appendChild($img);
 
-        if (!empty($block->data->caption)) {
+        if (!empty($caption)) {
             $figCaption = $this->dom->createElement('figcaption');
-            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figCaption->appendChild($this->html5->loadHTMLFragment($caption));
             $figure->appendChild($figCaption);
         }
 
@@ -359,6 +364,8 @@ class Parser
 
         $attrs = [];
 
+        $caption = (!empty($block->data->caption)) ? $block->data->caption : '';
+
         if ($block->data->withBorder) $attrs[] = "withborder";
         if ($block->data->withBackground) $attrs[] = "withbackground";
         if ($block->data->stretched) $attrs[] = "stretched";
@@ -372,13 +379,13 @@ class Parser
         $img = $this->dom->createElement('img');
 
         $img->setAttribute('src', $block->data->url);
-        $img->setAttribute('alt', '');
+        $img->setAttribute('alt', $caption);
         
         $figure->appendChild($img);
 
-        if (!empty($block->data->caption)) {
+        if (!empty($caption)) {
             $figCaption = $this->dom->createElement('figcaption');
-            $figCaption->appendChild($this->html5->loadHTMLFragment($block->data->caption));
+            $figCaption->appendChild($this->html5->loadHTMLFragment($caption));
             $figure->appendChild($figCaption);
         }
 
