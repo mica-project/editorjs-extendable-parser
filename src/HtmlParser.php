@@ -226,7 +226,7 @@ class HtmlParser
 				$innerHTML .= $childNode->ownerDocument->saveHTML($childNode);
 			}
 		} else {
-			$innerHTML .= $node->nodeValue;
+			$innerHTML .= (isset($node->nodeValue)) ? $node->nodeValue : '';
 		}
 		
 		return $innerHTML;
