@@ -11,27 +11,27 @@ class Parser
     /**
      * @var Config
      */
-    private $config;
+    protected $config;
     
     /**
      * @var StdClass
      */
-    private $data;
+    protected $data;
 
     /**
      * @var DOMDocument
      */
-    private $dom;
+    protected $dom;
 
     /**
      * @var HTML5
      */
-    private $html5;
+    protected $html5;
 
     /**
      * @var string
      */
-    private $prefix;
+    protected $prefix;
 
     public function __construct(string $data)
     {
@@ -51,7 +51,7 @@ class Parser
 
     static function parse($data)
     {
-        return new self($data);
+        return new statoc($data);
     }
 
     /**
@@ -95,7 +95,7 @@ class Parser
     /**
      * @throws ParserException
      */
-    private function init()
+    protected function init()
     {
         if (!$this->hasBlocks()) throw new ParserException('No blocks to parse !');
         foreach ($this->data->blocks as $block) {
@@ -108,12 +108,12 @@ class Parser
         }
     }
 
-    private function hasBlocks()
+    protected function hasBlocks()
     {
         return count($this->data->blocks) !== 0;
     }
 
-    private function addClass($type, $alignment = false, $style = false)
+    protected function addClass($type, $alignment = false, $style = false)
     {
         $class[] = $this->prefix.'-'.$type;
         
