@@ -51,7 +51,7 @@ class Parser
 
     static function parse($data)
     {
-        return new statoc($data);
+        return new static($data);
     }
 
     /**
