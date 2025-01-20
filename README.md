@@ -1,42 +1,45 @@
  [![codecov](https://codecov.io/gh/Durlecode/editorjs-simple-html-parser/branch/master/graph/badge.svg?token=OKG54EX9C3)](https://codecov.io/gh/Durlecode/editorjs-simple-html-parser)
- [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
 # Simple PHP Parser for Editor.js
+
+Project is heavily based on [Edd-G/editorjs-simple-html-parser](https://github.com/Edd-G/editorjs-simple-html-parser) 
+and [Durlecode/editorjs-simple-html-parser](https://github.com/Durlecode/editorjs-simple-html-parser) work. Kudos to these guys!
 
 Parse data for [Editor.js](https://editorjs.io/ "Editor.js Homepage") with 2 way:
 1. Parse JSON data to HTML
 2. Parse HTML to JSON data
 ## Supported Tools
 
-Package | Key | Main CSS Class<br>(with default prefix) | Additional / modificator CSS classes<br>(with default prefix)
---- | --- | --- | ---
-`@editorjs/header`<br>`editorjs-header-with-alignment` | `header` | `.prs-header` | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>`.prs_justify`
-`@editorjs/paragraph`<br>`editorjs-paragraph-with-alignment` | `paragraph` | `.prs-paragraph` | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>`.prs_justify`
-`@editorjs/inline-code` |  |  |
-`@editorjs/marker` |  |  |
-`@editorjs/underline` |  |  |
-`@editorjs/list` | `list` | `.prs-list` | additional:<br>`.prs_ordered`
-`@editorjs/raw` | `raw` |  |
-`@editorjs/simple-image` | `simpleImage` | `.prs-image` | additional:<br>`.prs_withborder`<br>`.prs_withbackground`<br>`.prs_stretched`
-`@editorjs/embed` | `embed` | `.prs-embed` | additional:<br>`.prs_youtube`<br>`.prs_codepen`<br>`.prs_vimeo`
-`@editorjs/link` | `linkTool` | `.prs-linktool` | additional:<br>`.prs_title`<br>`.prs_description`<br>`.prs_sitename`
-`@editorjs/delimiter` | `delimiter` | `.prs-delimiter` |
-`editorjs-alert` | `alert` | `.prs-alert` | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>additional:<br>`.prs_primary`<br>`.prs_secondary`<br>`.prs_info`<br>`.prs_success`<br>`.prs_warning`<br>`.prs_danger`<br>`.prs_light`<br>`.prs_dark`
-`@editorjs/warning` | `warning` | `.prs-warning` |
-`@editorjs/table` | `table` | `.prs-table` | additional:<br>`.prs_withheadings`
-`@editorjs/quote` | `quote` | `.prs-quote` | alignment:<br>`.prs_left`<br>`.prs_center`
-`@editorjs/code` | `code` | `.prs-code`
+| Package                                                      | Key           | Main CSS Class<br>(with default prefix) | Additional / modificator CSS classes<br>(with default prefix)                                                                                                                                                      |
+|--------------------------------------------------------------|---------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `@editorjs/header`<br>`editorjs-header-with-alignment`       | `header`      | `.prs-header`                           | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>`.prs_justify`                                                                                                                                       |
+| `@editorjs/paragraph`<br>`editorjs-paragraph-with-alignment` | `paragraph`   | `.prs-paragraph`                        | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>`.prs_justify`                                                                                                                                       |
+| `@editorjs/inline-code`                                      |               |                                         |                                                                                                                                                                                                                    |
+| `@editorjs/marker`                                           |               |                                         |                                                                                                                                                                                                                    |
+| `@editorjs/underline`                                        |               |                                         |                                                                                                                                                                                                                    |
+| `@editorjs/list`                                             | `list`        | `.prs-list`                             | additional:<br>`.prs_ordered`                                                                                                                                                                                      |
+| `@editorjs/raw`                                              | `raw`         |                                         |                                                                                                                                                                                                                    |
+| `@editorjs/simple-image`                                     | `simpleImage` | `.prs-image`                            | additional:<br>`.prs_withborder`<br>`.prs_withbackground`<br>`.prs_stretched`                                                                                                                                      |
+| `@editorjs/embed`                                            | `embed`       | `.prs-embed`                            | additional:<br>`.prs_youtube`<br>`.prs_codepen`<br>`.prs_vimeo`                                                                                                                                                    |
+| `@editorjs/link`                                             | `linkTool`    | `.prs-linktool`                         | additional:<br>`.prs_title`<br>`.prs_description`<br>`.prs_sitename`                                                                                                                                               |
+| `@editorjs/delimiter`                                        | `delimiter`   | `.prs-delimiter`                        |                                                                                                                                                                                                                    |
+| `editorjs-alert`                                             | `alert`       | `.prs-alert`                            | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>additional:<br>`.prs_primary`<br>`.prs_secondary`<br>`.prs_info`<br>`.prs_success`<br>`.prs_warning`<br>`.prs_danger`<br>`.prs_light`<br>`.prs_dark` |
+| `@editorjs/warning`                                          | `warning`     | `.prs-warning`                          |                                                                                                                                                                                                                    |
+| `@editorjs/table`                                            | `table`       | `.prs-table`                            | additional:<br>`.prs_withheadings`                                                                                                                                                                                 |
+| `@editorjs/quote`                                            | `quote`       | `.prs-quote`                            | alignment:<br>`.prs_left`<br>`.prs_center`                                                                                                                                                                         |
+| `@editorjs/code`                                             | `code`        | `.prs-code`                             |                                                                                                                                                                                                                    |
 
 ## Installation
 
 ```
-composer require edd-g/editorjs-simple-html-parser
+composer require mica-project/editorjs-simple-html-parser
 ```
 ## 1. JSON to HTML Parser
 
 ### Usage
 
 ```php
-use Durlecode\EJSParser\Parser;
+use MicaProject\EJSParser\Parser;
 
 $html = Parser::parse($data)->toHtml();
 ```
@@ -62,7 +65,7 @@ Where `$data` is the clean JSON data coming from Editor.js *See `$data` example 
 By default this will generate html with css classes with `prs` prefix, so if you want to change it, follow example below
 
 ```php
-use Durlecode\EJSParser\Parser;
+use MicaProject\EJSParser\Parser;
 
 $parser = new Parser($data);
 

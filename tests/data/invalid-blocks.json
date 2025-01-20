@@ -1,0 +1,12 @@
+{
+  "time": 1583848289745,
+  "blocks": [
+    {
+      "type": "hello",
+      "data": {
+        "foo": "bar"
+      }
+    }
+  ],
+  "version": "2.16.1"
+}

@@ -1,25 +1,31 @@
 <?php
 
-namespace Durlecode\EJSParser;
+namespace MicaProject\EJSParser;
 
 class Config
 {
-	/**
-     * @var string Prefix for CSS classes
-     */
-    private $prefix = "prs";
+    public function __construct(
 
-    /**
-     * @var string EditorJS version
-     */
-    private $version = "2.28.2";
+        /**
+         * @var string Prefix for CSS classes
+         */
+        protected string $prefix = 'prs',
+
+        /**
+         * @var string EditorJS version
+         */
+        protected string $version = '2.28.2',
+    )
+    {
+    }
+
 
     public function getPrefix(): string
-	{
-		return $this->prefix;
-	}
+    {
+        return $this->prefix;
+    }
 
-	/**
+    /**
      * @param string $prefix
      */
     public function setPrefix(string $prefix): void
@@ -28,7 +34,7 @@ class Config
     }
 
     /**
-     * @param string $version
+     * @return string
      */
     public function getVersion(): string
     {

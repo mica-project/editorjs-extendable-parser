@@ -1,33 +1,56 @@
 <?php
 
-namespace Durlecode\EJSParser\Tests;
+namespace MicaProject\EJSParser\Tests;
 
-use Durlecode\EJSParser\Parser;
+use MicaProject\EJSParser\Parser;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Exception;
 
-class ParserTest extends TestCase
+#[CoversClass(Parser::class)]
+final class ParserTest extends TestCase
 {
-    protected $seed;
-    protected $emptyBlocks;
-
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public static function seedDataProvider(): array
     {
-        $this->seed = file_get_contents(__DIR__ . '/data/seed.json');
-
-        $this->emptyBlocks = file_get_contents(__DIR__ . '/data/empty-blocks.json');
-
-        parent::__construct($name, $data, $dataName);
+        $data = file_get_contents(__DIR__ . '/data/seed.json');
+        return [
+            [$data],
+        ];
     }
 
-    public function testToHtml()
+    public static function emptyBlockDataProvider(): array
     {
-        $this->assertIsString(Parser::parse($this->seed)->toHtml());
+        $data = file_get_contents(__DIR__ . '/data/empty-blocks.json');
+        return [
+            [$data],
+        ];
     }
 
-    public function testGetters()
+    public static function invalidBlockDataProvider(): array
     {
-        $parser = new Parser($this->seed);
+        $data = file_get_contents(__DIR__ . '/data/invalid-blocks.json');
+        return [
+            [$data],
+        ];
+    }
+
+    /**
+     * @throws \Durlecode\EJSParser\ParserException
+     */
+    #[DataProvider('seedDataProvider')]
+    public function testToHtml(string $seed): void
+    {
+        $this->assertIsString(Parser::parse($seed)->toHtml());
+    }
+
+    /**
+     * @throws \Durlecode\EJSParser\ParserException
+     */
+    #[DataProvider('seedDataProvider')]
+    public function testGetters(string $seed): void
+    {
+        $parser = new Parser($seed);
 
         $prefix = "trd";
 
@@ -44,12 +67,30 @@ class ParserTest extends TestCase
         $this->assertIsString($parser->getVersion());
     }
 
-    public function testToHtmlWithoutBlocks()
+    /**
+     * @throws \Durlecode\EJSParser\ParserException
+     */
+
+    #[DataProvider('emptyBlockDataProvider')]
+    public function testToHtmlWithoutBlocks(string $emptyBlocks): void
     {
         $this->expectException(Exception::class);
 
-        $this->expectExceptionMessage('No Blocks to parse !');
+        $this->expectExceptionMessage('No blocks to parse!');
 
-        Parser::parse($this->emptyBlocks)->toHtml();
+        Parser::parse($emptyBlocks)->toHtml();
+    }
+
+    /**
+     * @throws \Durlecode\EJSParser\ParserException
+     */
+    #[DataProvider('invalidBlockDataProvider')]
+    public function testToHtmlInvalidBlocks(string $invalidBlocks): void
+    {
+        $this->expectException(Exception::class);
+
+        $this->expectExceptionMessage('Unknown block hello!');
+
+        Parser::parse($invalidBlocks)->toHtml();
     }
 }

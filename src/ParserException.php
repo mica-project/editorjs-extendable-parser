@@ -1,6 +1,6 @@
 <?php
 
-namespace Durlecode\EJSParser;
+namespace MicaProject\EJSParser;
 
 use Exception;
 
