@@ -1,6 +1,6 @@
  [![codecov](https://codecov.io/gh/Durlecode/editorjs-simple-html-parser/branch/master/graph/badge.svg?token=OKG54EX9C3)](https://codecov.io/gh/Durlecode/editorjs-simple-html-parser)
  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
-# Simple PHP Parser for Editor.js
+# Extendable PHP Parser for Editor.js
 
 Project is heavily based on [Edd-G/editorjs-simple-html-parser](https://github.com/Edd-G/editorjs-simple-html-parser) 
 and [Durlecode/editorjs-simple-html-parser](https://github.com/Durlecode/editorjs-simple-html-parser) work. Kudos to these guys!
@@ -21,7 +21,7 @@ Parse data for [Editor.js](https://editorjs.io/ "Editor.js Homepage") with 2 way
 | `@editorjs/raw`                                              | `raw`         |                                         |                                                                                                                                                                                                                    |
 | `@editorjs/simple-image`                                     | `simpleImage` | `.prs-image`                            | additional:<br>`.prs_withborder`<br>`.prs_withbackground`<br>`.prs_stretched`                                                                                                                                      |
 | `@editorjs/embed`                                            | `embed`       | `.prs-embed`                            | additional:<br>`.prs_youtube`<br>`.prs_codepen`<br>`.prs_vimeo`                                                                                                                                                    |
-| `@editorjs/link`                                             | `linkTool`    | `.prs-linktool`                         | additional:<br>`.prs_title`<br>`.prs_description`<br>`.prs_sitename`                                                                                                                                               |
+| `@editorjs/link`                                             | `link`        | `.prs-link`                             | additional:<br>`.prs_title`<br>`.prs_description`<br>`.prs_sitename`                                                                                                                                               |
 | `@editorjs/delimiter`                                        | `delimiter`   | `.prs-delimiter`                        |                                                                                                                                                                                                                    |
 | `editorjs-alert`                                             | `alert`       | `.prs-alert`                            | alignment:<br>`.prs_left`<br>`.prs_right`<br>`.prs_center`<br>additional:<br>`.prs_primary`<br>`.prs_secondary`<br>`.prs_info`<br>`.prs_success`<br>`.prs_warning`<br>`.prs_danger`<br>`.prs_light`<br>`.prs_dark` |
 | `@editorjs/warning`                                          | `warning`     | `.prs-warning`                          |                                                                                                                                                                                                                    |
@@ -32,7 +32,7 @@ Parse data for [Editor.js](https://editorjs.io/ "Editor.js Homepage") with 2 way
 ## Installation
 
 ```
-composer require mica-project/editorjs-simple-html-parser
+composer require mica-project/editorjs-extendable-parser
 ```
 ## 1. JSON to HTML Parser
 
@@ -168,10 +168,10 @@ Return Editor.js content blocks
 <hr class="prs-delimiter">
 ```
 
-##### LinkTool
+##### Link
 
 ```html
-<figure class="prs-linkTool">
+<figure class="prs-link">
     <a href="https://github.com/" target="_blank">
        <img src="https://example.com/cat.png" alt="">
        <p class="prs_title">Title</p>
@@ -185,6 +185,14 @@ Return Editor.js content blocks
 
 ```html
 <figure class="prs-image prs_withborder prs_withbackground prs_stretched">
+    <img src="" alt="">
+    <figcaption></figcaption>
+</figure>
+
+##### SimpleImage
+
+```html
+<figure class="prs-simpleimage prs_withborder prs_withbackground prs_stretched">
     <img src="" alt="">
     <figcaption></figcaption>
 </figure>
@@ -230,7 +238,7 @@ Return Editor.js content blocks
 ### Usage
 
 ```php
-use Durlecode\EJSParser\HtmlParser;
+use MicaProject\EJSParser\HtmlParser;
 
 $parser = new HtmlParser($html);
 
@@ -245,7 +253,7 @@ Where `$html` is the HTML specially tagged with CSS classes *See examples of the
 By default this will parse html with css classes with `prs` prefix, so if you want to change it, follow example below
 
 ```php
-use Durlecode\EJSParser\HtmlParser;
+use MicaProject\EJSParser\HtmlParser;
 
 $parser = new HtmlParser($html);
 
@@ -257,7 +265,7 @@ $blocks = $parser->toBlocks();
 You may set time and version EditorJS generated blocks *By default: time generate auto, EditorJS version pass from config.php*:
 
 ```php
-use Durlecode\EJSParser\HtmlParser;
+use MicaProject\EJSParser\HtmlParser;
 
 $parser = new HtmlParser($html);
 
